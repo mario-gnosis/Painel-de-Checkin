@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Ckeckin - Teste</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="./css/codigo.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+ <div class="space">
+
+<script>
+$(document).ready(function() {
+$("#mais").click(function(){
+ 
+if($("#mudeValor").val() < 9){
+$('#mudeValor').val(parseInt($('#mudeValor').val())+1); return false;
+} else {
+//$('#limite').html('Não é possível selecionar mais do que 9 passageiros.');
+alert('Não é possível selecionar mais do que 9 passageiros.');
+return false;
+}
+ 
+});
+$("#menos").click(function(){
+$('#limite').html('');
+if($("#mudeValor").val()!=0){$('#mudeValor').val(parseInt($('#mudeValor').val())-1);} return false;
+});
+});
+</script>
+
+<!-- <div id="limite"></div> -->
+<h4>Estado: Default</h4>
+<div class="dropdown "> 
+  <div class="submit-line">
+  <input type="text"  data-toggle="dropdown" value="1"  class="conteudo" readonly="readonly" id="mudeValor"/>
+  <button class="submit-lente" type="submit">
+    <i class="fa fa-user"></i>
+  </button>
+  <ul class="dropdown-menu menu">
+  <div style="padding-top: 5%">
+     <table class="table">  
+       <tr>
+                <td>Adultos (+12 anos)</td>
+                 <td><input type="button" class="btn" value=" - " id="menos" /></td>
+                 <td> <p value="1" readonly="readonly" id="mudeValor">1</a> </p>
+                 <td><input type="button" class="maisCor btn" value=" + " id="mais" /></td>                 
+               </tr> 
+               <tr>  
+                  <td>Crianças (2-11 anos)</td>
+                 <td><input type="button" class="btn" value=" - " id="menos" /></td>
+                  <td><div id="mudeValor">0</div> </td>
+                  <td><input type="button" class="maisCor btn" value=" + " id="mais" /></td>   
+             </tr>
+              <tr>  
+                  <td>Bebés (-2 anos)</td>
+                 <td><input type="button" class="btn" value=" - " id="menos" /></td>
+                  <td> <div id="mudeValor">0</div></td>
+                  <td><input type="button" class="maisCor btn" value=" + " id="mais" /></td>   
+             </tr>
+      </table>
+   </div>
+</ul>
+</div>
+
+</div>
+
+</body>
+</html>

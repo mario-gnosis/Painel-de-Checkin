@@ -1,0 +1,43 @@
+.tooltip, .tooltip-inner {
+    min-width: auto !important;
+    width: 350px !important;
+    background-color: #f0f0f0;
+}
+.space{
+  margin-left: 40%;
+  padding-top: 10%;
+}
+table, tr, td {
+  color: black;
+   border:none !important;
+}
+table{
+  width: 100%;
+  float: center;
+  padding-bottom: 0px;
+}
+.maisCor{
+  background-color: grey;  
+}
+input{
+  border-radius: 3px;  
+}
+.submit-lente {
+  position:absolute;
+  top:0; left: 0;
+  z-index:10;
+  border:none;
+  background:transparent;
+  outline:none;
+}
+.submit-line {
+  position: relative;
+  width: 200px;
+}
+
+.menu{
+   width: 380px;
+}
+.conteudo{ 
+  padding-left: 10%;
+}
