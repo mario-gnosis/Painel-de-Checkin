@@ -1,75 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Ckeckin - Teste</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+    crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="./css/codigo.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
+
 <body>
 
- <div class="space">
+  <div class="space">
 
-<script>
-$(document).ready(function() {
-$("#mais").click(function(){
- 
-if($("#mudeValor").val() < 9){
-$('#mudeValor').val(parseInt($('#mudeValor').val())+1); return false;
-} else {
-//$('#limite').html('Não é possível selecionar mais do que 9 passageiros.');
-alert('Não é possível selecionar mais do que 9 passageiros.');
-return false;
-}
- 
-});
-$("#menos").click(function(){
-$('#limite').html('');
-if($("#mudeValor").val()!=0){$('#mudeValor').val(parseInt($('#mudeValor').val())-1);} return false;
-});
-});
-</script>
+    <script>
+      // Inicialição das SessionStorage
+      sessionStorage.Count_Adulto = 1;
+      sessionStorage.Count_Crianca = 0;
+      sessionStorage.Count_Bebe = 0;
 
-<!-- <div id="limite"></div> -->
-<h4>Estado: Default</h4>
-<div class="dropdown "> 
-  <div class="submit-line">
-  <input type="text"  data-toggle="dropdown" value="1"  class="conteudo" readonly="readonly" id="mudeValor"/>
-  <button class="submit-lente" type="submit">
-    <i class="fa fa-user"></i>
-  </button>
-  <ul class="dropdown-menu menu">
-  <div style="padding-top: 5%">
-     <table class="table">  
-       <tr>
+      // Soma total de passageiros
+      function SomaPassageiros(TotalPassageiros) {
+
+        _Count_Passageiros = TotalPassageiros;
+
+        console.log('Total de passageiros: ', parseInt(TotalPassageiros));
+
+        if (TotalPassageiros > 8) {
+          alert('É permitido no máximo 9 passageiros.');
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      // Acrescenta S para pluralizar a palavra Adulto(s) Criança(s) Bebe(s)
+      function Pluralizacao(Quantidade) {
+        if (Quantidade > 1) {
+          return 's';
+        } else {
+          return '';
+        }
+      }
+
+      // Muda Status para Aberto ou Default
+      function Status(value) {
+        if (value == 1) {
+          $('#id_Estado').text('Estado: Aberto');
+          $("a[aria-expanded='true']");
+        } else if (value == 0) {
+          $('#id_Estado').text('Estado: Default');
+        }
+      }
+
+      /* 
+        Somar
+        Tipo: 1 = Adultos / 2 = Crianças / 3 = Bebes
+        Valor: Qtde
+      */
+      function Somar(tipo, valor) {
+        _adulto = 0;
+        _crianca = 0;
+        _bebe = 0;
+        _total = 0;
+
+        if (tipo == 1) {
+
+          // Verifica se tem mais de 9 passageiros  
+          if (!SomaPassageiros(parseInt(sessionStorage.Count_Adulto) + parseInt(sessionStorage.Count_Crianca) + parseInt(sessionStorage.Count_Bebe))) {
+            if (sessionStorage.Count_Adulto) {
+              sessionStorage.Count_Adulto = Number(sessionStorage.Count_Adulto) + 1;
+            } else {
+              sessionStorage.Count_Adulto = 1;
+            }
+
+            console.log('sessionStorage Soma Adulto -- > ', sessionStorage.Count_Adulto);
+
+            _adulto = parseInt($('#spnAdulto').text()) + valor;
+
+            $('#spnAdulto').text(_adulto);
+
+            // Verifica se mais de 1 criança
+            if (parseInt($('#spnCrianca').text()) == 0 && parseInt($('#spnBebe').text() == 0)) {
+              $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(_adulto));
+            }
+
+            $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(_adulto));
+          }
+        } else if (tipo == 2) {
+
+          if (!SomaPassageiros(parseInt(sessionStorage.Count_Adulto) + parseInt(sessionStorage.Count_Crianca) + parseInt(sessionStorage.Count_Bebe))) {
+
+            // Regra 1 -> 1 adulto, s/ bebés, pode adicionar até 4 crianças 
+            if ((sessionStorage.Count_Adulto == 1) && (sessionStorage.Count_Bebe == 0)) {
+              if (sessionStorage.Count_Crianca == 4) {
+                sessionStorage.Count_Crianca = 4;
+                alert('Não pode adicionar Crianças!');
+
+                return false;
+              }
+            } else {
+              alert('Não pode adicionar Crianças!');
+              return false;
+            }
+
+            if (sessionStorage.Count_Crianca > 0) {
+              sessionStorage.Count_Crianca = Number(sessionStorage.Count_Crianca) + 1;
+            } else {
+              sessionStorage.Count_Crianca = 1;
+            }
+
+            console.log('sessionStorage Soma Crianças -- > ', sessionStorage.Count_Crianca);
+
+            _crianca = parseInt($('#spnCrianca').text()) + valor;
+
+            if (!SomaPassageiros(_crianca)) {
+              $('#spnCrianca').text(_crianca);
+              $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())) + ', ' + $('#spnCrianca').text() + ' Criança' + Pluralizacao(parseInt($('#spnCrianca').text())));
+            }
+          }
+        } else if (tipo == 3) {
+
+          if (!SomaPassageiros(parseInt(sessionStorage.Count_Adulto) + parseInt(sessionStorage.Count_Crianca) + parseInt(sessionStorage.Count_Bebe))) {
+            // Regra 2 -> 1 adulto, c/ entre 0 - 1 crianças, pode adicionar 1 bebé  
+            if ((sessionStorage.Count_Adulto == 1) && (sessionStorage.Count_Crianca < 2)) {
+              if (sessionStorage.Count_Bebe == 1) {
+                sessionStorage.Count_Bebe = 1;
+                alert('Não pode adicionar Bebê!');
+
+                return false;
+              }
+            } else {
+              alert('Não pode adicionar Bebê!');
+              return false;
+            }
+
+            // Regra 3 -> 1 adulto, c/ 2 ou mais crianças, não pode adicionar bebés 
+            if ((sessionStorage.Count_Adulto == 1) && (sessionStorage.Count_Crianca > 1)) {
+              alert('Não pode adicionar Bebê!');
+              return false;
+            }
+
+            if (sessionStorage.Count_Bebe) {
+              sessionStorage.Count_Bebe = Number(sessionStorage.Count_Bebe) + 1;
+            } else {
+              sessionStorage.Count_Bebe = 1;
+            }
+
+            console.log('sessionStorage Soma Bebes -- > ', sessionStorage.Count_Bebe);
+
+            _bebe = parseInt($('#spnBebe').text()) + valor;
+
+            if (!SomaPassageiros(_bebe)) {
+              $('#spnBebe').text(_bebe);
+              $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())) + ', ' + $('#spnCrianca').text() + ' Criança' + Pluralizacao(parseInt($('#spnCrianca').text())) + ', ' + $('#spnBebe').text() + ' Bebê' + Pluralizacao(parseInt($('#spnBebe').text())));
+            }
+          }
+        }
+      };
+
+      /* 
+        Subtrair
+        Tipo: 1 = Adultos / 2 = Crianças / 3 = Bebes
+        Valor: Qtde
+      */
+      function Subtrair(tipo, valor) {
+        _adulto = 0;
+        _crianca = 0;
+        _bebe = 0;
+
+        // Adulto
+        if (tipo == 1) {
+          console.log('sessionStorage Sobtrair Adulto22 -- > ', sessionStorage.Count_Adulto);
+
+          if (sessionStorage.Count_Adulto > sessionStorage.Count_Adulto > 0) {
+            sessionStorage.Count_Adulto = Number(sessionStorage.Count_Adulto) - 1;
+          } else {
+            sessionStorage.Count_Adulto = 1;
+          }
+
+          console.log('sessionStorage Sobtrair Adulto -- > ', sessionStorage.Count_Adulto);
+
+          _adulto = parseInt($('#spnAdulto').text()) - Number(sessionStorage.Count_Adulto);
+
+          if (_adulto < 1) {
+            $('#spnAdulto').text(1);
+            return false;
+          } else {
+            $('#spnAdulto').text(_adulto);
+            $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(_adulto));
+          }
+        }
+        // Criança
+        else if (tipo == 2) {
+          if (sessionStorage.Count_Adulto > sessionStorage.Count_Adulto > 0) {
+            sessionStorage.Count_Crianca = Number(sessionStorage.Count_Crianca) - 1;
+          } else {
+            sessionStorage.Count_Crianca = 0;
+          }
+
+          console.log('sessionStorage Sobtrair Crianças -- > ', sessionStorage.Count_Crianca);
+
+          _crianca = parseInt($('#spnCrianca').text()) - valor;
+
+          if (_crianca < 1) {
+            $('#spnCrianca').text(0);
+            $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())));
+          } else {
+            $('#spnCrianca').text(_crianca);
+
+            if ((parseInt($('#spnCrianca').text()) == 0) || parseInt($('#spnbebe').text()) == 0) {
+              $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())));
+            }
+          }
+        }
+        // Bebe
+        else if (tipo == 3) {
+
+          if (sessionStorage.Count_Bebe) {
+            sessionStorage.Count_Bebe = Number(sessionStorage.Count_Bebe) - 1;
+          } else {
+            sessionStorage.Count_Bebe = 1;
+          }
+
+          console.log('sessionStorage Sobtrair bebê -- > ', sessionStorage.Count_Bebe);
+
+          _bebe = parseInt($('#spnBebe').text()) - valor;
+
+          if (_bebe < 1) {
+            $('#spnBebe').text('0');
+            $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())) + ', ' + $('#spnCrianca').text() + ' Criança' + Pluralizacao(parseInt($('#spnCrianca').text())));
+          } else {
+            $('#spnBebe').text(_bebe);
+
+            if (_bebe == 0 && parseInt($('#spnCrianca').text() == 0)) {
+              $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())));
+            }
+            else {
+              $("#mudeValor").val($('#spnAdulto').text() + ' Adulto' + Pluralizacao(parseInt($('#spnAdulto').text())) + ', ' + $('#spnCrianca').text() + ' Criança' + Pluralizacao(parseInt($('#spnCrianca').text())) + ', ' + $('#spnBebe').text() + ' Bebê' + Pluralizacao(parseInt($('#spnBebe').text())));
+            }
+          }
+         
+        }
+      }
+    </script>
+
+    <!-- <div id="limite"></div> -->
+    <h4 id="id_Estado">Estado: Default</h4>
+    <div class="dropdown">
+      <div class="submit-line">
+        <input type="text" data-toggle="dropdown" value="1 Adulto" class="display" readonly="readonly"
+          onclick="Status(1);" onblur="Status(0);" id="mudeValor" />
+        <button class="submit-lente" type="submit">
+          <i class="fa fa-user"></i>
+        </button>
+        <ul class="dropdown-menu menu">
+          <div style="padding-top: 5%">
+            <table class="table">
+              <tr>
                 <td>Adultos (+12 anos)</td>
-                 <td><input type="button" class="btn" value=" - " id="menos" /></td>
-                 <td> <p value="1" readonly="readonly" id="mudeValor">1</a> </p>
-                 <td><input type="button" class="maisCor btn" value=" + " id="mais" /></td>                 
-               </tr> 
-               <tr>  
-                  <td>Crianças (2-11 anos)</td>
-                 <td><input type="button" class="btn" value=" - " id="menos" /></td>
-                  <td><div id="mudeValor">0</div> </td>
-                  <td><input type="button" class="maisCor btn" value=" + " id="mais" /></td>   
-             </tr>
-              <tr>  
-                  <td>Bebés (-2 anos)</td>
-                 <td><input type="button" class="btn" value=" - " id="menos" /></td>
-                  <td> <div id="mudeValor">0</div></td>
-                  <td><input type="button" class="maisCor btn" value=" + " id="mais" /></td>   
-             </tr>
-      </table>
-   </div>
-</ul>
-</div>
-
-</div>
-
+                <td><input type="button" onclick='Subtrair(1, 1);' class="btn" value=" - " id="menos" /></td>
+                <td><label><span class="btn label-block" id="spnAdulto">1</span></label></td>
+                <td><input type="button" onclick='Somar(1, 1);' class="maisCor btn" value=" + " id="mais" /></td>
+              </tr>
+              <tr>
+                <td>Crianças (2-11 anos)</td>
+                <td><input type="button" onclick='Subtrair(2, 1);' class="btn" value=" - " id="menos" /></td>
+                <td><label><span class="btn label-block" id="spnCrianca">0</span></label></td>
+                <td><input type="button" onclick='Somar(2, 1);' class="maisCor btn" value=" + " id="mais" /></td>
+              </tr>
+              <tr>
+                <td>Bebés (-2 anos)</td>
+                <td><input type="button" onclick='Subtrair(3, 1);' class="btn" value=" - " id="menos" /></td>
+                <td><label><span class="btn label-block" id="spnBebe">0</span></label></td>
+                <td><input type="button" onclick='Somar(3, 1);' class="maisCor btn" value=" + " id="mais" /></td>
+              </tr>
+            </table>
+          </div>
+        </ul>
+      </div>
+    </div>
 </body>
+
 </html>

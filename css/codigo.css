@@ -15,6 +15,7 @@ table{
   width: 100%;
   float: center;
   padding-bottom: 0px;
+   padding-left: 10px;
 }
 .maisCor{
   background-color: grey;  
@@ -28,7 +29,7 @@ input{
   z-index:10;
   border:none;
   background:transparent;
-  outline:none;
+  outline:none; 
 }
 .submit-line {
   position: relative;
@@ -40,4 +41,8 @@ input{
 }
 .conteudo{ 
   padding-left: 10%;
+}
+.display{
+  width: 210px; 
+  padding-left: 12%; 
 }
